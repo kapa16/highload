@@ -17,6 +17,10 @@ services:
     restart: always
     build:
       context: ./docker/php
+    links:
+      - rabbit
+    depends_on:
+      - rabbit
     volumes:
       - ./docker/php/php.ini:/usr/local/etc/php/php.ini
       - ./html/:/var/www/html/
@@ -31,3 +35,14 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: test
+
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - 15672:15672
+      - 5672:5672
+    volumes:
+      - ./docker/rabbit/data:/bitnami
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
